@@ -1,52 +1,98 @@
-# Neynar History — Farcaster Mini App (Vercel)
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=2,8,15&height=180&section=header&text=NeynarHistory&fontSize=48&fontColor=000000&fontAlignY=38&desc=Track+Farcaster+Neynar+score+history+over+7%2F30%2F90+days&descAlignY=58&descSize=14&animation=fadeIn" width="100%"/>
 
-Domain is **hard-coded** to: https://neynar-history.vercel.app/
+<div align="center">
 
-## Product spec (concise)
+[![Live](https://img.shields.io/badge/Live%20App-bbf7d0?style=for-the-badge&logoColor=000)](https://neynar-history.vercel.app)
+[![License](https://img.shields.io/badge/MIT-bfdbfe?style=for-the-badge&logoColor=000)](LICENSE)
+[![Platform](https://img.shields.io/badge/Farcaster%20Mini%20App-fde68a?style=for-the-badge&logoColor=000)]()
+[![Tech](https://img.shields.io/badge/TypeScript%20%2B%20Vite-fca5a5?style=for-the-badge&logoColor=000)]()
 
-### Screens
-- **Home**
-  - “Sign in with Farcaster” (SIWF via Mini App host)
-  - Shows identity (FID + @handle + optional avatar)
-  - Shows latest known Neynar score
-  - Search: @handle or numeric FID
-  - CTA: View 90-day history
-- **User Score**
-  - Current score (0–1) + last fetched time
-  - Badge: Up / Down / Flat vs last snapshot
-  - Range toggles: 7 / 30 / 90 days
-  - Line chart + table
-  - Change timeline list (only when score changed)
-  - Track button (pins fid for cron snapshots)
-  - Export CSV
+</div>
 
-### Snapshot store
-`snapshots(fid, score, captured_at)` and `tracked(fid, last_viewed_at, pinned)` in Vercel Postgres.
+<div align="center">
+<i>Sign in with Farcaster, view your current Neynar score, and see how it changed over the last 7, 30, or 90 days with a line chart and change timeline.</i>
+</div>
 
-### Snapshot strategy
-- On-demand: viewing a user fetches latest score and stores snapshot (deduped to 1 per 6 hours).
-- Scheduled (optional): Vercel Cron hits `/api/cron?secret=...` to refresh pinned/recent fids.
+---
 
-### Disclaimer language (used in UI)
-**Possible factors (not guaranteed)**  
-Neynar does not provide a per-change explanation feed here. These are general possibilities, not a definitive audit. Reduced activity over time can be associated with lower scores. Model recalibrations can shift scores across many accounts at once.
+## ✦ Features
 
-## Vercel deployment
+<div align="center">
 
-### Required env vars
-- `NEYNAR_API_KEY`
-- Add **Vercel Postgres** to the project (Vercel injects `POSTGRES_URL` etc.)
+| | Feature | What it does |
+|:---:|---|---|
+| 🔐 | Sign in with Farcaster | Auth via SIWF through the Mini App host |
+| 📊 | Score history chart | Line chart of Neynar score over 7 / 30 / 90 days |
+| 🔍 | Search any user | Look up any @handle or FID |
+| 📈 | Up / Down / Flat badge | Shows direction vs last snapshot at a glance |
+| 📋 | Change timeline | Lists only days when the score actually changed |
+| 📌 | Track users | Pin a FID to include it in scheduled cron snapshots |
+| 💾 | Export CSV | Download the full score history as a CSV file |
+| 🗄️ | Vercel Postgres | Snapshots stored in Postgres, deduped to 1 per 6 hours |
 
-### Optional env vars
-- `CRON_SECRET` (only if you enable scheduled snapshots)
+</div>
 
-### Optional cron
-Create a Vercel Cron job:
-- Path: `/api/cron?secret=<CRON_SECRET>`
-- Suggested schedule: every 6 hours
+---
 
-## Local dev
+## ✦ Download & Run
+
+**Step 1** .... Clone the repo
+
+```bash
+git clone https://github.com/0xnurrabby/NeynarHistory
+cd NeynarHistory
+```
+
+**Step 2** .... Install and configure
+
 ```bash
 npm install
-npm run dev
+# Create .env with required vars (see Setup)
 ```
+
+**Step 3** .... Start dev server
+
+```bash
+npm run dev
+# Open http://localhost:5173
+```
+
+---
+
+## ✦ Setup
+
+```
+1. Clone the repo and run npm install
+2. Create a .env file with:
+   NEYNAR_API_KEY=your_neynar_api_key
+3. Add a Vercel Postgres database to your project
+   (Vercel injects POSTGRES_URL and related vars automatically)
+4. Optional: add CRON_SECRET for scheduled snapshot refreshes
+5. Run npm run dev
+6. For production: deploy to Vercel
+   - Add the Postgres integration in Vercel dashboard
+   - Set NEYNAR_API_KEY in environment variables
+   - Optional cron: create a Vercel Cron job pointing to
+     /api/cron?secret=<CRON_SECRET> on a 6-hour schedule
+```
+
+---
+
+## ✦ Project Structure
+
+```
+NeynarHistory/
+  src/           ->  React + TypeScript frontend (score chart, user search)
+  api/           ->  Vercel serverless functions (score fetch, snapshots, cron)
+  index.html     ->  entry point with Farcaster mini app meta
+  public/        ->  static assets
+  package.json
+  vite.config.js
+  vercel.json
+```
+
+---
+
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=2,8,15&height=100&section=footer&animation=fadeIn" width="100%"/>
+
+<div align="center">MIT License .... built by <a href="https://github.com/0xnurrabby">0xnurrabby</a></div>
